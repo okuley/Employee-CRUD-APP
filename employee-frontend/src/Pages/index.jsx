@@ -4,7 +4,10 @@ function Home(){
   const [lastName,setLastName]=useState("");
   const [email,setEmail]=useState("");
   const [dob,setDob]=useState("");
+  const [id,setId]=useState("");
   const [employees,setEmployees]=useState([]);
+
+  
   
 function senddata(){
 const employee={firstName,lastName,email,dob}
@@ -19,7 +22,9 @@ fetch('http://localhost:8080/api/vi/employee',
     },
     body: JSON.stringify(employee)
 }).then(res => res.json())
-.then(res => console.log(res));
+.then(() => {
+  setEmployees(employees)
+});
  
 }
 
@@ -33,12 +38,56 @@ fetch('http://localhost:8080/api/vi/employee')
 )
 },[])
 
+function deleteemp(id){
+   
+  if (window.confirm("Are you sure you want to delete this project?"))
+  {
+    fetch(`http://localhost:8080/api/vi/employee/${id}`,
+  {
+    method: 'DELETE'
+}).then(() => {
+  setEmployees(employees.filter(em => em.id !== id))
+})
+.then(res => console.log(res));
+
+alert("Employee with ID " + id + " was deleted successfully");
+  }
+
+  
+
+}
+
+function editemp(id){
+
+  if (window.confirm("Are you sure you want to delete this project?"))
+  {
+    fetch(`http://localhost:8080/api/vi/employee/${id}`,
+  {
+    method: 'PUT'
+}).then(() => {
+  setEmployees(employees)
+})
+.then(res => console.log(res));
+
+alert("Employee with ID " + id + " was updated successfully");
+  }
+
+}
+
+const onChangeHandler = (id, key, value) => {
+  setEmployees(values => {
+    return values.map(employee =>
+      employee.id === id ? { ...employee, [key]: value } : employee
+    )
+  })
+}
+
   return(
     
      <div className="container ">
-      <div className="row container">
-      <div className="col-md-6" >
-       <h2>Add Employee</h2> 
+      <div className="row justify-content-center">
+      <div className="" >
+       <h2 className="">Add Employee</h2> 
        <form  className="">
        <div className="">
        <label htmlFor="firstName" className="form-label">First Name</label>
@@ -62,7 +111,7 @@ fetch('http://localhost:8080/api/vi/employee')
   </div>
   <br/>
   <div className="d-flex justify-content-center">
-  <button type="submit" onClick={senddata} className="btn btn-primary" >Submit</button>
+  <button type="submit" onClick={senddata} className="btn btn-primary" >Add Employee</button>
   </div>
  
 
@@ -71,29 +120,48 @@ fetch('http://localhost:8080/api/vi/employee')
     </div>
 
       </div>
-      <div className="container">
-         <h1 className="">Employee Details</h1>
-        {employees.map(employee=> (<div className="container" key={employee.id}>
-        <ul className="list-group">
-        <li className="list-group-item"> First Name : {employee.firstName} </li>
-        <li  className="list-group-item">  Last Name : {employee.lastName} </li>
-        <li  className="list-group-item">  Email : {employee.email} </li>
-        <li  className="list-group-item">  DOB : {employee.dob} </li>
-        <li  className="list-group-item">   Age :{employee.age} </li>
-           </ul>
-           
-           <br/>
-           <div className="d-flex justify-content-center">
-           <button type="button" className="btn btn-warning mr-3">Update </button>
-           <button type="button" className="btn btn-danger">Delete</button>
-           </div>
+      <br/>
+      <div className="container-fluid">
+         <h1 className="text-center">Employee Details</h1>
+        
+        <table className="table ">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>FistName</th>
+            <th>FistName</th>
+            <th >Email</th>
+            <th >DOB</th>
+            <th>Age</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {employees.map(employee=> (<tr className="container-fluid" key={employee.id}>
           
-           <br/>
-           <br/>
-           <br/>
-          </div>)
+            <td>{employee.id}</td>
+            <td>{employee.firstName}</td>
+            <td>{employee.lastName}</td>
+            <td >{employee.email}</td>
+            <td >{employee.dob}</td>
+            <td>{employee.age}</td>
+            <td><button type="button" className="btn btn-warning m-3" onClick={()=>editemp(employee.id)} >Edit</button>
+            &nbsp;
+            <button type="button" className="btn btn-danger" onClick={()=>deleteemp(employee.id)}>Delete</button>
+            </td>
+
+          </tr>
+
+          
+          )
           
           )}
+        </tbody>
+         </table>
+          
+          
+             
+       
       </div>
 
      </div>
