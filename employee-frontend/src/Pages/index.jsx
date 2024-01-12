@@ -9,6 +9,7 @@ function Home(){
   const [newLastName,setNewLastName]=useState("");
   const [newEmail,setNewEmail]=useState("");
   const [newDob,setNewDob]=useState("");
+  const [newEmployee,setNewEmployee]=useState([]);
   
 
   
@@ -42,9 +43,22 @@ fetch('http://localhost:8080/api/vi/employee')
 )
 },[])
 
+function getEmployee(id){
+  
+  fetch(`http://localhost:8080/api/vi/employee/${id}`)
+  .then(res=>res.json())
+  .then((result)=>{
+    setNewEmployee(result)
+    console.log(result)
+})
+}  
+  
+  
+  
+
 function deleteemp(id){
    
-  if (window.confirm("Are you sure you want to delete this project?"))
+  if (window.confirm("Are you sure you want to delete this employee?"))
   {
     fetch(`http://localhost:8080/api/vi/employee/${id}`,
   {
@@ -61,19 +75,14 @@ alert("Employee with ID " + id + " was deleted successfully");
 
 }
 
-function editemp(id){
-  
-  
-  const firstName=newFirstName
-  const lastName=newLastName
-  const email=newEmail
-  const dob=newDob
-  const employee = {firstName,lastName,email,dob}
+function editemployee(id){
+  const employee = {id,firstName,lastName,email,dob} 
+  console.log(employee)
   if (window.confirm("Are you sure you want to edit this employee?"))
   {
     fetch(`http://localhost:8080/api/vi/employee/${id}`,
   {
-    method: 'PUT',
+    method:'PUT',
     body: JSON.stringify(employee),
       headers: {
         "Content-type": "application/json",
@@ -153,7 +162,7 @@ alert("Employee with ID " + id + " was updated successfully");
             <td >{employee.email}</td>
             <td >{employee.dob}</td>
             <td>{employee.age}</td>
-            <td><button type="button" className="btn btn-warning m-3" data-toggle="modal" data-target="#modal1" >Edit</button>
+            <td><button type="button" className="btn btn-warning m-3" data-toggle="modal" data-target="#modal1" onClick={()=>getEmployee(employee.id)} >Edit</button>
             
             <div className="modal" id="modal1"  role="dialog" aria-labelledby="modallabel1" aria-hidden= "true">
             <div className="row justify-content-center">
@@ -163,27 +172,27 @@ alert("Employee with ID " + id + " was updated successfully");
        <form  className="">
        <div className="">
        <label htmlFor="firstName" className="form-label">First Name</label>
-    <input type="text" className="form-control" id="firstName" name="firstName" defaultValue={employee.firstName} 
-     onChange={(e)=>setNewFirstName(e.target.value)}/>
+    <input type="text" className="form-control" id="firstName" name="firstName" defaultValue={newEmployee.firstName} 
+     onChange={(e)=>setFirstName(e.target.value)}/>
     </div>
   <div className="">
   <label htmlFor="lastName" className="form-label">Last Name</label>
-    <input type="text" className="form-control" id="lastName" name="lastName" defaultValue={employee.lastName} 
-    onChange={(e)=>setNewLastName(e.target.value)} />
+    <input type="text" className="form-control" id="lastName" name="lastName" defaultValue={newEmployee.lastName} 
+    onChange={(e)=>setLastName(e.target.value)} />
   </div>
   <div className="">
   <label htmlFor="email" className="form-label">Email</label>
-    <input type="email" className="form-control" id="email" name="email" defaultValue={employee.email} 
-    onChange={(e)=>setNewEmail(e.target.value)} />
+    <input type="email" className="form-control" id="email" name="email" defaultValue={newEmployee.email} 
+    onChange={(e)=>setEmail(e.target.value)} />
   </div>
   <div className="">
   <label htmlFor="dob" className="form-label">Date 0f Birth</label>
-    <input type="date" className="form-control" id="dob" name="dob" defaultValue={employee.dob} 
-    onChange={(e)=>setNewDob(e.target.value)} />
+    <input type="date" className="form-control" id="dob" name="dob" defaultValue={newEmployee.dob} 
+    onChange={(e)=>setDob(e.target.value)} />
   </div>
   <br/>
   <div className="d-flex justify-content-center modal-footer">
-  <button type="submit"  className="btn btn-primary" onClick={()=>editemp(employee.id)} >Update Employee</button>
+  <button type="submit"  className="btn btn-primary" onClick={()=>editemployee(newEmployee.id)} >Update Employee</button>
   </div>
  
 
