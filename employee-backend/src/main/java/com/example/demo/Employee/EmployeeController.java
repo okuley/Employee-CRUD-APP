@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -24,6 +25,12 @@ private final EmployeeService employeeService;
             return employeeService.getEmployees();
 
         }
+
+        @RequestMapping(value = "/{employeeId}",method = RequestMethod.GET)
+        public Optional<Employee> getEmployeeByID(@PathVariable("employeeId") int employeeId){
+        return employeeService.getEmployeeByID(employeeId);
+        }
+
 @PostMapping
         public String createNewEmployee(@RequestBody Employee employee){
     employeeService.addNewEmployee(employee);
@@ -34,7 +41,7 @@ private final EmployeeService employeeService;
 employeeService.deleteEmployee(employeeId);
 }
 
-@PutMapping(path = "{employeeId}")
+@RequestMapping(value = "api/vi/employee/{employeeId}",method = RequestMethod.PUT)
 public void updateEmployee(@PathVariable ("employeeId") int employeeId,
                            @RequestParam (required = false) String firstName,
                            @RequestParam (required = false) String lastName,

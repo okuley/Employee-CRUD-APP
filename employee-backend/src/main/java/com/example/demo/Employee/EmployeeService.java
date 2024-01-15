@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -25,6 +26,10 @@ private final EmployeeRepository employeeRepository;
 */
     public List<Employee> getEmployees() {
         return employeeRepository.findAll();
+    }
+
+    public Optional<Employee> getEmployeeByID(long EmployeeId){
+        return employeeRepository.findById(EmployeeId);
     }
 
     public void addNewEmployee(Employee employee){
