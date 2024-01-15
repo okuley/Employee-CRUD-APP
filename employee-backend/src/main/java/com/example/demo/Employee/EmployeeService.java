@@ -28,9 +28,7 @@ private final EmployeeRepository employeeRepository;
         return employeeRepository.findAll();
     }
 
-    public Optional<Employee> getEmployeeByID(long EmployeeId){
-        return employeeRepository.findById(EmployeeId);
-    }
+
 
     public void addNewEmployee(Employee employee){
     employeeRepository.save(employee);
@@ -43,16 +41,16 @@ public  void deleteEmployee( long EmployeeId){
         Employee employee=employeeRepository.findById(employeeId).
                 orElseThrow(()-> new IllegalStateException("Employee with id" + employeeId + "does not exist") );
 
-    if(firstName != null && firstName.length()>0 &&
+    if(firstName != null && !firstName.isEmpty() &&
             !Objects.equals(employee.getFirstName(),firstName)){
         employee.setFirstName(firstName);
     }
-    if(lastName != null && lastName.length()>0 &&
+    if(lastName != null && !lastName.isEmpty() &&
             !Objects.equals(employee.getLastName(),lastName)){
         employee.setLastName(lastName);
     }
 
-    if(email != null && email.length()>0 &&
+    if(email != null && !email.isEmpty() &&
             !Objects.equals(employee.getEmail(),email)){
         employee.setEmail(email);
     }

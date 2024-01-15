@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path="api/vi/employee")
+@RequestMapping(path="api/v1/employee")
 public class EmployeeController {
 private final EmployeeService employeeService;
 
@@ -26,10 +26,7 @@ private final EmployeeService employeeService;
 
         }
 
-        @RequestMapping(value = "/{employeeId}",method = RequestMethod.GET)
-        public Optional<Employee> getEmployeeByID(@PathVariable("employeeId") int employeeId){
-        return employeeService.getEmployeeByID(employeeId);
-        }
+
 
 @PostMapping
         public String createNewEmployee(@RequestBody Employee employee){
@@ -41,13 +38,14 @@ private final EmployeeService employeeService;
 employeeService.deleteEmployee(employeeId);
 }
 
-@RequestMapping(value = "api/vi/employee/{employeeId}",method = RequestMethod.PUT)
+@PutMapping(path = "{employeeId}")
 public void updateEmployee(@PathVariable ("employeeId") int employeeId,
                            @RequestParam (required = false) String firstName,
                            @RequestParam (required = false) String lastName,
                            @RequestParam (required = false) String email,
                            @RequestParam (required = false) LocalDate dob){
     employeeService.updateEmployee(employeeId,firstName,lastName,email,dob);
+
 
 }
 
