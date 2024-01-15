@@ -18,7 +18,7 @@ function senddata(){
 const employee={firstName,lastName,email,dob}
 console.log(employee)
 
-fetch('http://localhost:8080/api/vi/employee',
+fetch('http://localhost:8080/api/v1/employee',
   {
     method: 'POST',
     headers: {
@@ -34,7 +34,7 @@ fetch('http://localhost:8080/api/vi/employee',
 }
 
 useEffect(()=>{
-fetch('http://localhost:8080/api/vi/employee')
+fetch('http://localhost:8080/api/v1/employee')
 .then(res=>res.json())
 .then((result)=>{
   setEmployees(result);
@@ -44,23 +44,21 @@ fetch('http://localhost:8080/api/vi/employee')
 },[])
 
 function getEmployee(id){
+  const employee = employees.find((employee) => employee.id === id);
   
-  fetch(`http://localhost:8080/api/vi/employee/${id}`)
-  .then(res=>res.json())
-  .then((result)=>{
-    setNewEmployee(result)
-    console.log(result)
-})
-}  
+    setNewEmployee(employee)
+    console.log(employee)
+   }
   
   
+
   
 
 function deleteemp(id){
    
   if (window.confirm("Are you sure you want to delete this employee?"))
   {
-    fetch(`http://localhost:8080/api/vi/employee/${id}`,
+    fetch(`http://localhost:8080/api/v1/employee/${id}`,
   {
     method: 'DELETE'
 }).then(() => {
@@ -69,32 +67,57 @@ function deleteemp(id){
 .then(res => console.log(res));
 
 alert("Employee with ID " + id + " was deleted successfully");
-  }
+  
+}
 
   
 
 }
 
-function editemployee(id){
+/* function editemployee(id){
   const employee = {id,firstName,lastName,email,dob} 
   console.log(employee)
-  if (window.confirm("Are you sure you want to edit this employee?"))
-  {
-    fetch(`http://localhost:8080/api/vi/employee/${id}`,
-  {
+  fetch(`http://localhost:8080/api/v1/employee/${id}`,{
     method:'PUT',
     body: JSON.stringify(employee),
-      headers: {
-        "Content-type": "application/json",
-      },
-}).then(() => {
-  setEmployees(employees)
+      headers: { 'Content-type': 'application/json; charset=UTF-8'}
 })
-.then(res => console.log(res));
-
-alert("Employee with ID " + id + " was updated successfully");
+.then(() => {
+  setEmployees(employees)
   }
+);
+alert("user has been update");
+} */
 
+
+function editemployee(id) {
+  const employee = { id, firstName, lastName, email, dob };
+  
+  console.log(employee);
+  fetch(`http://localhost:8080/api/v1/employee/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(employee),
+    headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+  })
+    .then(response => {
+      console.log(response); // Log the response for debugging
+      alert("logged response");
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      //setEmployees(employees);
+      alert("set employees");
+    })
+    .then(data => {
+      console.log('Success:', data); // Log successful response for debugging
+      //setEmployees(employees);
+      alert("user has been update");
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Failed to update user');
+    });
+  
 }
 
 
@@ -182,7 +205,7 @@ alert("Employee with ID " + id + " was updated successfully");
   </div>
   <div className="">
   <label htmlFor="email" className="form-label">Email</label>
-    <input type="email" className="form-control" id="email" name="email" defaultValue={newEmployee.email} 
+    <input type="email"  className="form-control" id="email" name="email" defaultValue={newEmployee.email} 
     onChange={(e)=>setEmail(e.target.value)} />
   </div>
   <div className="">
